@@ -1,18 +1,25 @@
-/*
- * Project mqtt_thing
- * Description:
- * Author:
- * Date:
- */
+#include "MQTT.h"
 
-// setup() runs once, when the device is first turned on.
+SYSTEM_THREAD(ENABLED);
+
+void callback(char* topic, byte* payload, unsigned int length);
+
+MQTT client("lab.thewcl.com", 1883, callback);
+
 void setup() {
-  // Put initialization like pinMode and begin functions here.
-
+  Serial.begin(9600);
+  while (!Serial.isConnected()) {}
 }
 
-// loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  // The core of your code will likely live here.
+  if (clinet.isConnected()) {
+    client.loop();
+  } else {
+    client.connect(System.deviceID());
+    client.subscribe("iot2023");
+  }
+}
 
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.println(payload);
 }
